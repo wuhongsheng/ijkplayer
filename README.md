@@ -39,7 +39,7 @@ dependencies {
 
 ### My Build Environment
 - Common
- - Mac OS X 10.11.5
+ - Mac OS X 10.15.7
 - Android
  - [NDK r10e](http://developer.android.com/tools/sdk/ndk/index.html)
  - Android Studio 2.1.3

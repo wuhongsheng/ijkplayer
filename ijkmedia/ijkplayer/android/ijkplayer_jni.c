@@ -39,6 +39,7 @@
 #include "ijksdl/android/ijksdl_android_jni.h"
 #include "ijksdl/android/ijksdl_codec_android_mediadef.h"
 #include "ijkavformat/ijkavformat.h"
+#include <android/bitmap.h>
 
 #define JNI_MODULE_PACKAGE      "tv/danmaku/ijk/media/player"
 #define JNI_CLASS_IJKPLAYER     "tv/danmaku/ijk/media/player/IjkMediaPlayer"
@@ -1180,6 +1181,12 @@ static JNINativeMethod g_methods[] = {
 
     { "native_setLogLevel",     "(I)V",                     (void *) IjkMediaPlayer_native_setLogLevel },
     { "_setFrameAtTime",        "(Ljava/lang/String;JJII)V", (void *) IjkMediaPlayer_setFrameAtTime },
+
+    /*扩展录像方法*/
+    { "getCurrentFrame",        "(Landroid/graphics/Bitmap;)Z", (void *) IjkMediaPlayer_getCurrentFrame },
+    { "startRecord",            "(Ljava/lang/String;)I", (void *) IjkMediaPlayer_startRecord },
+    { "stopRecord",             "()I",      (void *) IjkMediaPlayer_stopRecord },
+
 };
 
 JNIEXPORT jint JNI_OnLoad(JavaVM *vm, void *reserved)
