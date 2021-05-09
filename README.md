@@ -41,7 +41,7 @@ dependencies {
 - Common
  - Mac OS X 10.15.7
 - Android
- - [NDK r10e](http://developer.android.com/tools/sdk/ndk/index.html)
+ - [NDK r14b](http://developer.android.com/tools/sdk/ndk/index.html)
  - Android Studio 2.1.3
  - Gradle 2.14.1
 - iOS
