@@ -722,6 +722,7 @@ typedef struct FFPlayer {
     int render_wait_start;
 
 
+
     /*用于录像截图*/
     AVFormatContext *m_ofmt_ctx;        // 用于输出的AVFormatContext结构体
     AVOutputFormat *m_ofmt;
@@ -736,6 +737,7 @@ typedef struct FFPlayer {
     int64_t start_v_dts;                // 开始录制时dts 视频
     int64_t start_a_pts;                // 开始录制时pts 音频
     int64_t start_a_dts;                // 开始录制时dts 音频
+
 } FFPlayer;
 
 #define fftime_to_milliseconds(ts) (av_rescale(ts, 1000, AV_TIME_BASE))
