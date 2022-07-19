@@ -107,6 +107,7 @@ void      ffp_set_subtitle_codec_info(FFPlayer *ffp, const char *module, const c
 
 void      ffp_set_playback_rate(FFPlayer *ffp, float rate);
 void      ffp_set_playback_volume(FFPlayer *ffp, float volume);
+
 int       ffp_get_video_rotate_degrees(FFPlayer *ffp);
 int       ffp_set_stream_selected(FFPlayer *ffp, int stream, int selected);
 
@@ -117,5 +118,16 @@ void      ffp_set_property_int64(FFPlayer *ffp, int id, int64_t value);
 
 // must be freed with free();
 struct IjkMediaMeta *ffp_get_meta_l(FFPlayer *ffp);
+
+//申明录制视频、截图相关方法
+int       ffp_start_record(FFPlayer *ffp, const char *file_name);
+int       ffp_stop_record(FFPlayer *ffp);
+int       ffp_record_file(FFPlayer *ffp, AVPacket *packet);
+int       ffp_record_file2(FFPlayer *ffp, AVPacket *packet);
+void      ffp_get_current_frame_l(FFPlayer *ffp, uint8_t *frame_buf);
+//设置文本水印
+void      ffp_set_drawtext_content(FFPlayer *ffp, const char *drawtext);
+void      ffp_set_filter_Info(FFPlayer *ffp, const char *filter_info);
+AVStream			*m_vStream;
 
 #endif

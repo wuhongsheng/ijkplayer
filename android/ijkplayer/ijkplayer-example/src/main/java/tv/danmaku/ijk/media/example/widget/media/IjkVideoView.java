@@ -25,8 +25,6 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -39,15 +37,19 @@ import android.widget.MediaController;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
+import tv.danmaku.ijk.media.example.R;
+import tv.danmaku.ijk.media.example.application.Settings;
+import tv.danmaku.ijk.media.example.services.MediaPlayerService;
 import tv.danmaku.ijk.media.exo.IjkExoMediaPlayer;
 import tv.danmaku.ijk.media.player.AndroidMediaPlayer;
 import tv.danmaku.ijk.media.player.IMediaPlayer;
@@ -58,9 +60,6 @@ import tv.danmaku.ijk.media.player.misc.IMediaDataSource;
 import tv.danmaku.ijk.media.player.misc.IMediaFormat;
 import tv.danmaku.ijk.media.player.misc.ITrackInfo;
 import tv.danmaku.ijk.media.player.misc.IjkMediaFormat;
-import tv.danmaku.ijk.media.example.R;
-import tv.danmaku.ijk.media.example.application.Settings;
-import tv.danmaku.ijk.media.example.services.MediaPlayerService;
 
 public class IjkVideoView extends FrameLayout implements MediaController.MediaPlayerControl {
     private String TAG = "IjkVideoView";
@@ -392,6 +391,7 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
 
     IMediaPlayer.OnVideoSizeChangedListener mSizeChangedListener =
             new IMediaPlayer.OnVideoSizeChangedListener() {
+                @Override
                 public void onVideoSizeChanged(IMediaPlayer mp, int width, int height, int sarNum, int sarDen) {
                     mVideoWidth = mp.getVideoWidth();
                     mVideoHeight = mp.getVideoHeight();
@@ -409,6 +409,7 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
             };
 
     IMediaPlayer.OnPreparedListener mPreparedListener = new IMediaPlayer.OnPreparedListener() {
+        @Override
         public void onPrepared(IMediaPlayer mp) {
             mPrepareEndTime = System.currentTimeMillis();
             mHudViewHolder.updateLoadCost(mPrepareEndTime - mPrepareStartTime);
@@ -466,6 +467,7 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
 
     private IMediaPlayer.OnCompletionListener mCompletionListener =
             new IMediaPlayer.OnCompletionListener() {
+                @Override
                 public void onCompletion(IMediaPlayer mp) {
                     mCurrentState = STATE_PLAYBACK_COMPLETED;
                     mTargetState = STATE_PLAYBACK_COMPLETED;
@@ -480,6 +482,7 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
 
     private IMediaPlayer.OnInfoListener mInfoListener =
             new IMediaPlayer.OnInfoListener() {
+                @Override
                 public boolean onInfo(IMediaPlayer mp, int arg1, int arg2) {
                     if (mOnInfoListener != null) {
                         mOnInfoListener.onInfo(mp, arg1, arg2);
@@ -531,6 +534,7 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
 
     private IMediaPlayer.OnErrorListener mErrorListener =
             new IMediaPlayer.OnErrorListener() {
+                @Override
                 public boolean onError(IMediaPlayer mp, int framework_err, int impl_err) {
                     Log.d(TAG, "Error: " + framework_err + "," + impl_err);
                     mCurrentState = STATE_ERROR;
@@ -583,6 +587,7 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
 
     private IMediaPlayer.OnBufferingUpdateListener mBufferingUpdateListener =
             new IMediaPlayer.OnBufferingUpdateListener() {
+                @Override
                 public void onBufferingUpdate(IMediaPlayer mp, int percent) {
                     mCurrentBufferPercentage = percent;
                 }
@@ -1066,11 +1071,15 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
                         ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "overlay-format", pixelFormat);
                     }
                     ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "framedrop", 1);
+                    //缓冲区
                     ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "start-on-prepared", 0);
 
                     ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "http-detect-range-support", 0);
-
+                    //对指定帧不做环路滤波, 可以节省CPU.
                     ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_CODEC, "skip_loop_filter", 48);
+
+                    //清空DNS,有时因为在APP里面要播放多种类型的视频(如:MP4,直播,直播平台保存的视频,和其他http视频), 有时会造成因为DNS的问题而报10000问题的
+                    //ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "dns_cache_clear", 1);
                 }
                 mediaPlayer = ijkMediaPlayer;
             }

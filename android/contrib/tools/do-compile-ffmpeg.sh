@@ -60,7 +60,8 @@ FF_DEP_LIBS=
 
 FF_MODULE_DIRS="compat libavcodec libavfilter libavformat libavutil libswresample libswscale"
 FF_ASSEMBLER_SUB_DIRS=
-
+# FDK_AAC
+FF_BUILD_NAME_FDK_AAC=$FF_BUILD_ROOT/build/fdk-aac/arm64-v8a
 
 #--------------------
 echo ""
@@ -156,6 +157,8 @@ elif [ "$FF_ARCH" = "arm64" ]; then
 
     FF_CFG_FLAGS="$FF_CFG_FLAGS --arch=aarch64 --enable-yasm"
 
+    #FF_EXTRA_CFLAGS="$FF_EXTRA_CFLAGS -I/usr/local/include"
+    #FF_EXTRA_LDFLAGS="$FF_EXTRA_LDFLAGS -L/usr/local/lib -lx264"
     FF_EXTRA_CFLAGS="$FF_EXTRA_CFLAGS"
     FF_EXTRA_LDFLAGS="$FF_EXTRA_LDFLAGS"
 
@@ -184,6 +187,9 @@ FF_DEP_OPENSSL_INC=$FF_BUILD_ROOT/build/$FF_BUILD_NAME_OPENSSL/output/include
 FF_DEP_OPENSSL_LIB=$FF_BUILD_ROOT/build/$FF_BUILD_NAME_OPENSSL/output/lib
 FF_DEP_LIBSOXR_INC=$FF_BUILD_ROOT/build/$FF_BUILD_NAME_LIBSOXR/output/include
 FF_DEP_LIBSOXR_LIB=$FF_BUILD_ROOT/build/$FF_BUILD_NAME_LIBSOXR/output/lib
+
+FF_DEP_FDK_AAC_INC=$FF_BUILD_NAME_FDK_AAC/include
+FF_DEP_FDK_AAC_LIB=$FF_BUILD_NAME_FDK_AAC/lib
 
 case "$UNAME_S" in
     CYGWIN_NT-*)
@@ -235,6 +241,24 @@ FF_CFLAGS="-O3 -Wall -pipe \
 # not necessary
 #FF_CFLAGS="$FF_CFLAGS -finline-limit=300"
 
+
+#FF_CFLAGS="$FF_CFLAGS -I${FF_DEP_FDK_AAC_INC}"
+#FF_DEP_LIBS="$FF_DEP_LIBS -L${FF_DEP_FDK_AAC_LIB}"
+
+#freetype
+#FF_CFLAGS="$FF_CFLAGS -I/usr/local/opt/freetype/include/freetype2"
+#FF_DEP_LIBS="$FF_DEP_LIBS -L $FF_BUILD_ROOT/usr/local/opt/freetype/lib -lfreetype"
+FF_CFLAGS="$FF_CFLAGS -I../freetype-arm64/include/freetype2"
+FF_DEP_LIBS="$FF_DEP_LIBS -L..//freetype-arm64/lib -lfreetype"
+
+#h264
+FF_CFLAGS="$FF_CFLAGS -I/Users/whs/Downloads/x264/libs/arm64-v8a/include"
+FF_DEP_LIBS="$FF_DEP_LIBS -L/Users/whs/Downloads/x264/libs/arm64-v8a/lib -lx264"
+
+
+
+PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/local/lib/pkgconfig:/usr/lib/pkgconfig
+
 export COMMON_FF_CFG_FLAGS=
 . $FF_BUILD_ROOT/../../config/module.sh
 
@@ -245,11 +269,13 @@ if [ -f "${FF_DEP_OPENSSL_LIB}/libssl.a" ]; then
     echo "OpenSSL detected"
 # FF_CFG_FLAGS="$FF_CFG_FLAGS --enable-nonfree"
     FF_CFG_FLAGS="$FF_CFG_FLAGS --enable-openssl"
-
+    echo ${FF_DEP_OPENSSL_INC}
+    echo ${FF_DEP_OPENSSL_LIB}
     FF_CFLAGS="$FF_CFLAGS -I${FF_DEP_OPENSSL_INC}"
+    #FF_DEP_LIBS="$FF_DEP_LIBS -L${FF_DEP_OPENSSL_LIB}"
     FF_DEP_LIBS="$FF_DEP_LIBS -L${FF_DEP_OPENSSL_LIB} -lssl -lcrypto"
 fi
-
+# with libsoxr
 if [ -f "${FF_DEP_LIBSOXR_LIB}/libsoxr.a" ]; then
     echo "libsoxr detected"
     FF_CFG_FLAGS="$FF_CFG_FLAGS --enable-libsoxr"
@@ -257,6 +283,15 @@ if [ -f "${FF_DEP_LIBSOXR_LIB}/libsoxr.a" ]; then
     FF_CFLAGS="$FF_CFLAGS -I${FF_DEP_LIBSOXR_INC}"
     FF_DEP_LIBS="$FF_DEP_LIBS -L${FF_DEP_LIBSOXR_LIB} -lsoxr"
 fi
+# with fdk-aac
+# if [ -f "${FF_DEP_FDK_AAC_LIB}/libfdk-aac.a" ]; then
+#     echo "libfdk-aac detected"
+#     echo ${FF_DEP_FDK_AAC_INC}
+#     echo ${FF_DEP_FDK_AAC_LIB}
+#     #FF_CFG_FLAGS="$FF_CFG_FLAGS --enable-libfdk_aac"
+#     FF_CFLAGS="$FF_CFLAGS -I${FF_DEP_FDK_AAC_INC}"
+#     FF_DEP_LIBS="$FF_DEP_LIBS -L${FF_DEP_FDK_AAC_LIB}"
+# fi
 
 FF_CFG_FLAGS="$FF_CFG_FLAGS $COMMON_FF_CFG_FLAGS"
 
@@ -301,6 +336,11 @@ cd $FF_SOURCE
 if [ -f "./config.h" ]; then
     echo 'reuse configure'
 else
+    echo "./Configure $FF_CFG_FLAGS"
+    echo "--------------------"
+    echo "--extra-cflags $FF_CFLAGS $FF_EXTRA_CFLAGS"
+    echo "--------------------"
+    echo "extra-ldflags $FF_DEP_LIBS $FF_EXTRA_LDFLAGS"
     which $CC
     ./configure $FF_CFG_FLAGS \
         --extra-cflags="$FF_CFLAGS $FF_EXTRA_CFLAGS" \

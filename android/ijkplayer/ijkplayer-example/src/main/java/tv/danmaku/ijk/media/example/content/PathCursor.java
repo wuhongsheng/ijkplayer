@@ -48,6 +48,7 @@ public class PathCursor extends AbstractCursor {
         if (parentDirectory.getParent() != null) {
             FileItem parentFile = new FileItem(new File(parentDirectory, ".."));
             parentFile.isDirectory = true;
+
             mFileList.add(parentFile);
         }
 

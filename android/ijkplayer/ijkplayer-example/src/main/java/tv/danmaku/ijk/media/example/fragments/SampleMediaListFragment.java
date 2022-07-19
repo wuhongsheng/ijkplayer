@@ -20,8 +20,6 @@ package tv.danmaku.ijk.media.example.fragments;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +27,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import tv.danmaku.ijk.media.example.R;
 import tv.danmaku.ijk.media.example.activities.VideoActivity;
@@ -67,6 +68,25 @@ public class SampleMediaListFragment extends Fragment {
                 VideoActivity.intentTo(activity, url, name);
             }
         });
+
+        mAdapter.addItem("https://dash.akamaized.net/akamai/bbb_30fps/bbb_30fps.mpd","DASH");
+
+        mAdapter.addItem("rtmp://live.hkstv.hk.lxdns.com/live/hks","香港卫视");
+        mAdapter.addItem("rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mov", "TEST RTSP");
+
+        //rtmp:\/\/192.162.130.251:1935\/live\/43100111011320000002_1
+        mAdapter.addItem("rtmp://192.162.130.251:1935/live/43100111011320000002_1", "RTMP");
+
+
+        mAdapter.addItem("http://192.162.130.251:8090/live?port=1935&app=live&stream=43100111011320000007_1", "西大门口(FLV)");
+
+        mAdapter.addItem("rtmp://192.162.130.251:1935/live/43100111011320000007_1", "西大门口(RTMP)");
+
+
+        //http:\/\/192.162.130.251:8090\/live?port=1935&app=live&stream=43100111011320000002_1
+        mAdapter.addItem("http://192.162.130.251:8090/live?port=1935&app=live&stream=43100111011320000002_1", "FLV");
+        mAdapter.addItem("http://192.162.130.251:8090/live/43100111011320000002_1.m3u8", "HLS");
+
 
         mAdapter.addItem("http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/bipbop_4x3_variant.m3u8", "bipbop basic master playlist");
         mAdapter.addItem("http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/gear1/prog_index.m3u8", "bipbop basic 400x300 @ 232 kbps");

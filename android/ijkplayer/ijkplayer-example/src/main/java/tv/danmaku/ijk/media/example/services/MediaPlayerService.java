@@ -21,10 +21,14 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
-import android.support.annotation.Nullable;
+
+import androidx.annotation.Nullable;
 
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 
+/**
+ * 播放器后台服务
+ */
 public class MediaPlayerService extends Service {
     private static IMediaPlayer sMediaPlayer;
 

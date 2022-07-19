@@ -18,17 +18,20 @@
 package tv.danmaku.ijk.media.example.widget.media;
 
 import android.graphics.SurfaceTexture;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.View;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 
 public interface IRenderView {
-    int AR_ASPECT_FIT_PARENT = 0; // without clip
-    int AR_ASPECT_FILL_PARENT = 1; // may clip
+    // without clip
+    int AR_ASPECT_FIT_PARENT = 0;
+    // may clip
+    int AR_ASPECT_FILL_PARENT = 1;
     int AR_ASPECT_WRAP_CONTENT = 2;
     int AR_MATCH_PARENT = 3;
     int AR_16_9_FIT_PARENT = 4;

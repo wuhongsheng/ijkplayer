@@ -20,6 +20,7 @@ package tv.danmaku.ijk.media.player;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.media.MediaDataSource;
 import android.media.MediaPlayer;
@@ -120,6 +121,7 @@ public class AndroidMediaPlayer extends AbstractMediaPlayer {
         mMediaDataSource = new MediaDataSourceProxy(mediaDataSource);
         mInternalMediaPlayer.setDataSource(mMediaDataSource);
     }
+
 
     @TargetApi(Build.VERSION_CODES.M)
     private static class MediaDataSourceProxy extends MediaDataSource {

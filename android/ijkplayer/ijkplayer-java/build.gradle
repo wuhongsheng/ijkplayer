@@ -11,7 +11,7 @@ android {
         abortOnError false
     }
     defaultConfig {
-        minSdkVersion 9
+        minSdkVersion 14
         targetSdkVersion rootProject.ext.targetSdkVersion
     }
     buildTypes {
@@ -20,10 +20,22 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+
 }
 
+
+task exportJar(type: Copy) {
+    from('build/intermediates/aar_main_jar/release/')
+    into('release/')
+    include('classes.jar')
+    ///Rename the jar
+    rename('classes.jar', 'ijkplayer.jar')
+}
+exportJar.dependsOn(build)
+
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
 }
 
 apply from: new File(rootProject.projectDir, "tools/gradle-on-demand.gradle");

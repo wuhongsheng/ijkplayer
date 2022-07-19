@@ -38,8 +38,10 @@ public class Settings {
     }
 
     public boolean getEnableBackgroundPlay() {
+        //后台播放
         String key = mAppContext.getString(R.string.pref_key_enable_background_play);
         return mSharedPreferences.getBoolean(key, false);
+        //return true;
     }
 
     public int getPlayer() {
@@ -53,6 +55,7 @@ public class Settings {
     }
 
     public boolean getUsingMediaCodec() {
+        //MediaCodec是Android提供的用于对音视频进行编解码的类
         String key = mAppContext.getString(R.string.pref_key_using_media_codec);
         return mSharedPreferences.getBoolean(key, false);
     }

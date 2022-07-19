@@ -24,12 +24,6 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
@@ -38,8 +32,13 @@ import android.view.ViewGroup;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
-import tv.danmaku.ijk.media.player.IjkMediaPlayer;
-import tv.danmaku.ijk.media.player.misc.ITrackInfo;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+
 import tv.danmaku.ijk.media.example.R;
 import tv.danmaku.ijk.media.example.application.Settings;
 import tv.danmaku.ijk.media.example.content.RecentMediaStorage;
@@ -47,6 +46,8 @@ import tv.danmaku.ijk.media.example.fragments.TracksFragment;
 import tv.danmaku.ijk.media.example.widget.media.AndroidMediaController;
 import tv.danmaku.ijk.media.example.widget.media.IjkVideoView;
 import tv.danmaku.ijk.media.example.widget.media.MeasureHelper;
+import tv.danmaku.ijk.media.player.IjkMediaPlayer;
+import tv.danmaku.ijk.media.player.misc.ITrackInfo;
 
 public class VideoActivity extends AppCompatActivity implements TracksFragment.ITrackHolder {
     private static final String TAG = "VideoActivity";
@@ -72,6 +73,7 @@ public class VideoActivity extends AppCompatActivity implements TracksFragment.I
     }
 
     public static void intentTo(Context context, String videoPath, String videoTitle) {
+        Log.e(TAG,"videoPath:"+videoPath);
         context.startActivity(newIntent(context, videoPath, videoTitle));
     }
 
@@ -141,10 +143,14 @@ public class VideoActivity extends AppCompatActivity implements TracksFragment.I
         mVideoView.setMediaController(mMediaController);
         mVideoView.setHudView(mHudView);
         // prefer mVideoPath
-        if (mVideoPath != null)
+        if (mVideoPath != null){
             mVideoView.setVideoPath(mVideoPath);
-        else if (mVideoUri != null)
+
+        }
+        else if (mVideoUri != null){
             mVideoView.setVideoURI(mVideoUri);
+
+        }
         else {
             Log.e(TAG, "Null Data Source\n");
             finish();
@@ -184,6 +190,7 @@ public class VideoActivity extends AppCompatActivity implements TracksFragment.I
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_toggle_ratio) {
+            //纵横比
             int aspectRatio = mVideoView.toggleAspectRatio();
             String aspectRatioText = MeasureHelper.getAspectRatioText(this, aspectRatio);
             mToastTextView.setText(aspectRatioText);

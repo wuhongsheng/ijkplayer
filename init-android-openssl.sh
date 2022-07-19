@@ -20,7 +20,12 @@
 IJK_OPENSSL_UPSTREAM=https://github.com/Bilibili/openssl.git
 IJK_OPENSSL_FORK=https://github.com/Bilibili/openssl.git
 IJK_OPENSSL_COMMIT=OpenSSL_1_0_2n
+
+#IJK_OPENSSL_COMMIT=OpenSSL_1_0_2u
+#IJK_OPENSSL_COMMIT=OpenSSL_1_1_1-stable
 IJK_OPENSSL_LOCAL_REPO=extra/openssl
+
+#https://github.com/openssl/openssl/tree/OpenSSL_1_1_1-stable
 
 set -e
 TOOLS=tools

@@ -17,18 +17,26 @@
 #
 
 # IJK_FFMPEG_UPSTREAM=git://git.videolan.org/ffmpeg.git
-IJK_FFMPEG_UPSTREAM=https://github.com/Bilibili/FFmpeg.git
-IJK_FFMPEG_FORK=https://github.com/Bilibili/FFmpeg.git
-IJK_FFMPEG_COMMIT=ff3.4--ijk0.8.7--20180103--001
+#IJK_FFMPEG_UPSTREAM=https://github.com/Bilibili/FFmpeg.git
+#IJK_FFMPEG_UPSTREAM=https://gitee.com/yuazhen/FFmpeg.git
+#IJK_FFMPEG_FORK=https://github.com/Bilibili/FFmpeg.git
+IJK_FFMPEG_FORK=https://gitee.com/qieziyuhouzi/FFmpeg_Bilibili.git
+
+
+#IJK_FFMPEG_FORK=https://gitee.com/yuazhen/FFmpeg.git
+#IJK_FFMPEG_COMMIT=ff3.4--ijk0.8.7--20180103--001
+#IJK_FFMPEG_COMMIT=ff4.0--ijk0.8.8--20210205--001
+IJK_FFMPEG_COMMIT=ff4.0--ijk0.8.8--20210426--001
 IJK_FFMPEG_LOCAL_REPO=extra/ffmpeg
 
+#执行出错时结束程序
 set -e
 TOOLS=tools
 
 git --version
 
 echo "== pull ffmpeg base =="
-sh $TOOLS/pull-repo-base.sh $IJK_FFMPEG_UPSTREAM $IJK_FFMPEG_LOCAL_REPO
+sh $TOOLS/pull-repo-base.sh $IJK_FFMPEG_FORK $IJK_FFMPEG_LOCAL_REPO
 
 function pull_fork()
 {
@@ -39,12 +47,15 @@ function pull_fork()
     cd -
 }
 
-pull_fork "armv5"
-pull_fork "armv7a"
+#pull_fork "armv5"
+#pull_fork "armv7a"
 pull_fork "arm64"
-pull_fork "x86"
-pull_fork "x86_64"
+#pull_fork "x86"
+#pull_fork "x86_64"
 
+#cp config/module-lite.sh config/module.sh
 ./init-config.sh
+#libyuv是一个开源项目，其中包括YUV转换和缩放功能。
 ./init-android-libyuv.sh
+#SoundTouch是一个开源音频处理库，它允许彼此独立地更改声音速度，音高和播放速率参数
 ./init-android-soundtouch.sh

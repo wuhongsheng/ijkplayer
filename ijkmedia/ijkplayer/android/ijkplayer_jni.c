@@ -39,6 +39,8 @@
 #include "ijksdl/android/ijksdl_android_jni.h"
 #include "ijksdl/android/ijksdl_codec_android_mediadef.h"
 #include "ijkavformat/ijkavformat.h"
+#include <android/bitmap.h>
+
 
 #define JNI_MODULE_PACKAGE      "tv/danmaku/ijk/media/player"
 #define JNI_CLASS_IJKPLAYER     "tv/danmaku/ijk/media/player/IjkMediaPlayer"
@@ -361,6 +363,62 @@ LABEL_RETURN:
     return retval;
 }
 
+
+static jboolean
+IjkMediaPlayer_getCurrentFrame(JNIEnv *env, jobject thiz, jobject bitmap)
+{
+    jboolean retval = JNI_TRUE;
+    IjkMediaPlayer *mp = jni_get_media_player(env, thiz);
+    JNI_CHECK_GOTO(mp, env, NULL, "mpjni: getCurrentFrame: null mp", LABEL_RETURN);
+
+    uint8_t *frame_buffer = NULL;
+
+    if (0 > AndroidBitmap_lockPixels(env, bitmap, (void **)&frame_buffer)) {
+        (*env)->ThrowNew(env, "java/io/IOException", "Unable to lock pixels.");
+        return JNI_FALSE;
+    }
+
+    ijkmp_get_current_frame(mp, frame_buffer);
+
+    if (0 > AndroidBitmap_unlockPixels(env, bitmap)) {
+        (*env)->ThrowNew(env, "java/io/IOException", "Unable to unlock pixels.");
+        return JNI_FALSE;
+    }
+
+LABEL_RETURN:
+    ijkmp_dec_ref_p(&mp);
+    return retval;
+}
+
+
+static jint
+IjkMediaPlayer_startRecord(JNIEnv *env, jobject thiz, jstring file)
+{
+    jint retval = 0;
+    IjkMediaPlayer *mp = jni_get_media_player(env, thiz);
+    JNI_CHECK_GOTO(mp, env, NULL, "mpjni: startRecord: null mp", LABEL_RETURN);
+    const char *nativeString = (*env)->GetStringUTFChars(env, file, 0);
+    retval = ijkmp_start_record(mp, nativeString);
+
+LABEL_RETURN:
+    ijkmp_dec_ref_p(&mp);
+    return retval;
+}
+
+static jint
+IjkMediaPlayer_stopRecord(JNIEnv *env, jobject thiz)
+{
+    jint retval = 0;
+    IjkMediaPlayer *mp = jni_get_media_player(env, thiz);
+    JNI_CHECK_GOTO(mp, env, NULL, "mpjni: stopRecord: null mp", LABEL_RETURN);
+
+    retval = ijkmp_stop_record(mp);
+
+LABEL_RETURN:
+    ijkmp_dec_ref_p(&mp);
+    return retval;
+}
+
 static void
 IjkMediaPlayer_release(JNIEnv *env, jobject thiz)
 {
@@ -510,6 +568,37 @@ IjkMediaPlayer_setVolume(JNIEnv *env, jobject thiz, jfloat leftVolume, jfloat ri
 LABEL_RETURN:
     ijkmp_dec_ref_p(&mp);
 }
+static void
+IjkMediaPlayer_setDrawText(JNIEnv *env, jobject thiz, jstring drawtext)
+{
+    MPTRACE("%s\n", __func__);
+    const char *c_drawtext = NULL;
+    IjkMediaPlayer *mp = jni_get_media_player(env, thiz);
+    JNI_CHECK_GOTO(mp, env, NULL, "mpjni: setDrawText: null mp", LABEL_RETURN);
+    c_drawtext = (*env)->GetStringUTFChars(env, drawtext, NULL );
+    ijkmp_set_filter_drawtext(mp,c_drawtext);
+
+LABEL_RETURN:
+    ijkmp_dec_ref_p(&mp);
+}
+
+static void
+IjkMediaPlayer_setFilterInfo(JNIEnv *env, jobject thiz, jstring filterinfo)
+{
+    MPTRACE("%s\n", __func__);
+    const char *c_filterinfo = NULL;
+    IjkMediaPlayer *mp = jni_get_media_player(env, thiz);
+    JNI_CHECK_GOTO(mp, env, NULL, "mpjni: setDrawText: null mp", LABEL_RETURN);
+    c_filterinfo = (*env)->GetStringUTFChars(env, filterinfo, NULL );
+    ijkmp_set_filter_Info(mp,c_filterinfo);
+
+    LABEL_RETURN:
+    ijkmp_dec_ref_p(&mp);
+}
+
+
+
+
 
 static jint
 IjkMediaPlayer_getAudioSessionId(JNIEnv *env, jobject thiz)
@@ -1128,9 +1217,6 @@ LABEL_RETURN:
 }
 
 
-
-
-
 // ----------------------------------------------------------------------------
 
 static JNINativeMethod g_methods[] = {
@@ -1152,6 +1238,15 @@ static JNINativeMethod g_methods[] = {
     { "isPlaying",              "()Z",      (void *) IjkMediaPlayer_isPlaying },
     { "getCurrentPosition",     "()J",      (void *) IjkMediaPlayer_getCurrentPosition },
     { "getDuration",            "()J",      (void *) IjkMediaPlayer_getDuration },
+
+    { "getCurrentFrame",        "(Landroid/graphics/Bitmap;)Z", (void *) IjkMediaPlayer_getCurrentFrame },
+    { "startRecord",            "(Ljava/lang/String;)I", (void *) IjkMediaPlayer_startRecord },
+    { "stopRecord",             "()I",      (void *) IjkMediaPlayer_stopRecord },
+    { "setDrawText",            "(Ljava/lang/String;)V",    (void *) IjkMediaPlayer_setDrawText },
+    { "setFilterInfo",            "(Ljava/lang/String;)V",    (void *) IjkMediaPlayer_setFilterInfo },
+
+
+
     { "_release",               "()V",      (void *) IjkMediaPlayer_release },
     { "_reset",                 "()V",      (void *) IjkMediaPlayer_reset },
     { "setVolume",              "(FF)V",    (void *) IjkMediaPlayer_setVolume },
@@ -1212,3 +1307,6 @@ JNIEXPORT void JNI_OnUnload(JavaVM *jvm, void *reserved)
 
     pthread_mutex_destroy(&g_clazz.mutex);
 }
+
+
+

@@ -30,36 +30,44 @@ public abstract class AbstractMediaPlayer implements IMediaPlayer {
     private OnInfoListener mOnInfoListener;
     private OnTimedTextListener mOnTimedTextListener;
 
+    @Override
     public final void setOnPreparedListener(OnPreparedListener listener) {
         mOnPreparedListener = listener;
     }
 
+    @Override
     public final void setOnCompletionListener(OnCompletionListener listener) {
         mOnCompletionListener = listener;
     }
 
+    @Override
     public final void setOnBufferingUpdateListener(
             OnBufferingUpdateListener listener) {
         mOnBufferingUpdateListener = listener;
     }
 
+    @Override
     public final void setOnSeekCompleteListener(OnSeekCompleteListener listener) {
         mOnSeekCompleteListener = listener;
     }
 
+    @Override
     public final void setOnVideoSizeChangedListener(
             OnVideoSizeChangedListener listener) {
         mOnVideoSizeChangedListener = listener;
     }
 
+    @Override
     public final void setOnErrorListener(OnErrorListener listener) {
         mOnErrorListener = listener;
     }
 
+    @Override
     public final void setOnInfoListener(OnInfoListener listener) {
         mOnInfoListener = listener;
     }
 
+    @Override
     public final void setOnTimedTextListener(OnTimedTextListener listener) {
         mOnTimedTextListener = listener;
     }
@@ -115,6 +123,7 @@ public abstract class AbstractMediaPlayer implements IMediaPlayer {
             mOnTimedTextListener.onTimedText(this, text);
     }
 
+    @Override
     public void setDataSource(IMediaDataSource mediaDataSource) {
         throw new UnsupportedOperationException();
     }

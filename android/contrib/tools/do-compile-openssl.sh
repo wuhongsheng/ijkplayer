@@ -58,6 +58,7 @@ echo "--------------------"
 . ./tools/do-detect-env.sh
 FF_MAKE_TOOLCHAIN_FLAGS=$IJK_MAKE_TOOLCHAIN_FLAGS
 FF_MAKE_FLAGS=$IJK_MAKE_FLAG
+#export IJK_GCC_VER=4.9 in do-detect-env.sh
 FF_GCC_VER=$IJK_GCC_VER
 FF_GCC_64_VER=$IJK_GCC_64_VER
 
@@ -134,8 +135,12 @@ echo "--------------------"
 echo "[*] make NDK standalone toolchain"
 echo "--------------------"
 . ./tools/do-detect-env.sh
+#--system=darwin-x86_64
 FF_MAKE_TOOLCHAIN_FLAGS=$IJK_MAKE_TOOLCHAIN_FLAGS
+#export IJK_MAKE_FLAG=-j`sysctl -n machdep.cpu.thread_count`
 FF_MAKE_FLAGS=$IJK_MAKE_FLAG
+
+
 
 
 FF_MAKE_TOOLCHAIN_FLAGS="$FF_MAKE_TOOLCHAIN_FLAGS --install-dir=$FF_TOOLCHAIN_PATH"
@@ -163,10 +168,34 @@ FF_CFG_FLAGS="$FF_CFG_FLAGS $COMMON_FF_CFG_FLAGS"
 #--------------------
 # Standard options:
 FF_CFG_FLAGS="$FF_CFG_FLAGS zlib-dynamic"
+
+#FF_CFG_FLAGS="$FF_CFG_FLAGS CC=clang"
+# 只生成静态库
+#FF_CFG_FLAGS="$FF_CFG_FLAGS $FF_PLATFORM_CFG_FLAGS"
+
 FF_CFG_FLAGS="$FF_CFG_FLAGS no-shared"
+#FF_CFG_FLAGS="$FF_CFG_FLAGS enable-md2"
+#FF_CFG_FLAGS="$FF_CFG_FLAGS enable-rc5"
+#FF_CFG_FLAGS="$FF_CFG_FLAGS experimental-store"
+
+#FF_CFG_FLAGS="$FF_CFG_FLAGS experimental-jpake"
+
+#FF_CFG_FLAGS="$FF_CFG_FLAGS -lssl"
+#FF_CFG_FLAGS="$FF_CFG_FLAGS -lcrypto"
+
+#FF_PREFIX_=$FF_BUILD_ROOT/$FF_BUILD_NAME
+#-lssl -lcrypto
 FF_CFG_FLAGS="$FF_CFG_FLAGS --openssldir=$FF_PREFIX"
+#FF_CFG_FLAGS="$FF_CFG_FLAGS --prefix=$FF_PREFIX_"
+
 FF_CFG_FLAGS="$FF_CFG_FLAGS --cross-compile-prefix=${FF_CROSS_PREFIX}-"
 FF_CFG_FLAGS="$FF_CFG_FLAGS $FF_PLATFORM_CFG_FLAGS"
+
+#./Configure   zlib-dynamic no-shared --openssldir=/Users/whs/ijkplayer-android/android/contrib/build/openssl-armv7a/output --cross-compile-prefix=arm-linux-androideabi- android-armv7
+
+# 设置Android API，这里设置的是21，编译过了。当设置14的时候出现编译失败，其他的版本需要你们去尝试了
+#ANDROID_API=21
+
 
 #--------------------
 echo ""
@@ -179,6 +208,7 @@ cd $FF_SOURCE
 #else
     echo "./Configure $FF_CFG_FLAGS"
     ./Configure $FF_CFG_FLAGS
+    #./Configure $FF_CFG_FLAGS  -D__ANDROID_API__=ANDROID_API
 #        --extra-cflags="$FF_CFLAGS $FF_EXTRA_CFLAGS" \
 #        --extra-ldflags="$FF_EXTRA_LDFLAGS"
 #fi

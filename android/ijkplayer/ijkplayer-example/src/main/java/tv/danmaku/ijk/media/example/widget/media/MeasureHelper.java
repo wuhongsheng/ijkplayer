@@ -18,13 +18,17 @@
 package tv.danmaku.ijk.media.example.widget.media;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.view.View;
+
+import androidx.annotation.NonNull;
 
 import java.lang.ref.WeakReference;
 
 import tv.danmaku.ijk.media.example.R;
 
+/**
+ * 测量布局尺寸
+ */
 public final class MeasureHelper {
     private WeakReference<View> mWeakView;
 
